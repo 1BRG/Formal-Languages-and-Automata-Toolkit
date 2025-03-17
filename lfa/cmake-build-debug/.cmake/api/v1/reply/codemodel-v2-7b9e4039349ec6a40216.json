@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/Gabi/lfa/cmake-build-debug",
-		"source" : "D:/Gabi/lfa"
+		"build" : "D:/Gabi/github/LFA/lfa/cmake-build-debug",
+		"source" : "D:/Gabi/github/LFA/lfa"
 	},
 	"version" : 
 	{

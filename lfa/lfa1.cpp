@@ -4,42 +4,45 @@
 #include <fstream>
 #include <map>
 using namespace std;
-string start;
-char c[200], cuv[200];
-bool valid = 1, v1, v2;
 const int n = 5000;
+char cuv[n];
+/**
+string wstart;
+char wc[200], wcuv[200];
+bool wvalid = 1, wv1, wv2;
 struct da
 {
-    string nod;
-    char a;
+    string wnod;
+    char wa;
 };
-map<string, vector<da>>v;
+map<string, vector<da>>wv;
 
 
-char s[200];
+char ws[200];
 char mat[5000][15];
-int i;
-int findState(const char mat[][15])
+int wi;
+int wfindState(const char mat[][15])
 {
     for(int i = 0; true; i ++)
         if(strcmp(mat[i], "States:"))
-        return i;
+            return i;
 }
-int findTran(char mat[][15])
+int wfindTran(char mat[][15])
 {
     for(int i = 0; true; i ++)
         if(strcmp(mat[i], "Transitions:"))
-        return i;
+            return i;
 }
-int findsigma(char mat[][15])
+int wfindsigma(char mat[][15])
 {
     for(int i = 0; true; i ++)
         if(strcmp(mat[i], "Sigma:"))
-        return i;
+            return i;
 }
 
-map<string, bool> noduri, Final, Alfabet;
-void State() {
+map<string, bool> wnoduri, wFinal, wAlfabet;
+void wState()
+{
     for (int i = findState(mat); true; i ++)
     {
         if (strcmp("End", mat[i]) == 0)
@@ -65,7 +68,8 @@ void State() {
         }
     }
 }
-void sigma() {
+void wsigma()
+{
     for (int i = findsigma(mat); true; i ++)
     {
         if (strcmp("End", mat[i]) == 0)
@@ -76,7 +80,8 @@ void sigma() {
         Alfabet[s] = 1;
     }
 }
-void Transition() {
+void wTransition()
+{
     for (int i = findState(mat); true; i ++)
     {
         if (strcmp("End", mat[i]) == 0)
@@ -92,7 +97,8 @@ void Transition() {
         {
             ct ++;
             strcpy(cuv, p);
-            if (ct == 1 || ct == 3) {
+            if (ct == 1 || ct == 3)
+            {
                 if (noduri[cuv] == 0)
                     valid = false;
                 break;
@@ -106,30 +112,43 @@ void Transition() {
         }
     }
 }
-class Input {
-    char mat[n][15];
-    //bool ok = true; optional;
+**/
+class Input
+{
+    char mat[n][15] = {'\0'};
+    ///bool ok = true;
 public:
+    Input() {}
+    Input(const string &filename)
+    {
+        ifstream f(filename);
+        int ct = 0, i = 0;
+        char c[200];
+        while (f.getline(mat[++i], sizeof(mat[i])) && ct - 3)
+            ct +=  (strcmp(mat[i], "END") == 0);
+    }
     int findState() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "States:"))
+            if(strcmp(mat[i], "States:") == 0)
                 return i;
     }
     int findTrans() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "Transitions:"))
+            if(strcmp(mat[i], "Transitions:") == 0)
                 return i;
     }
     int findSigma() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "Sigma:"))
+            if(strcmp(mat[i], "Sigma:") == 0)
                 return i;
     }
-    void Matrice(char copie[][15]) const{
-        for (int i = 0; i < n; i++) {
+    void Matrice(char copie[][15]) const
+    {
+        for (int i = 0; i < n; i++)
+        {
             strcpy(copie[i], mat[i]);
         }
     }
@@ -140,67 +159,88 @@ class States
     map<string, int> q;
 protected:
     int start = 0;
-    bool final[n] = {false};
+    bool final[n];
 public:
-    bool isValid() const
+    States() {}
+    bool validStates() const
     {
         return ok;
     }
-    States(const Input &citire) {
-        char mat[n][15];
+    States(const Input &citire)
+    {
+        for(int i = 0; i < n; i ++)
+            final[i] = 0;
+        char mat[n][15], cuv[15];
         citire.Matrice(mat);
         char s[15];
         int ct = 0;
         bool existaStart = false;
-        for (int i = citire.findState(); true; i ++) {
-            if (strcmp("End", mat[i]) == 0)
+        for (int i = citire.findState() + 1; true; i ++)
+        {
+            if (strcmp("END", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
             strcpy(s, mat[i]);
             char *p = strtok(s, ", ");
             int nod;
+            int ct1 = 0;
             while (p)
             {
                 strcpy(cuv, p);
-                if (cuv[0] == 'S')
+                if (cuv[0] == 'S' && ct1 != 0)
                 {
                     if (start != 0)
                         ok = false;
                     else start = nod, existaStart = 1;
                 }
-                else if (cuv[0] == 'F')
+                else if (cuv[0] == 'F' && ct1 != 0)
                     final[nod] = 1;
                 else
                     nod = q[cuv] != 0 ? q[cuv]: ++ ct, q[cuv] = ct;
+                ct1 += 1;
+                p = strtok(NULL, ", ");
             }
         }
         if (existaStart == 0)
             ok = false;
     }
-    int translate(const string& nod) const {
+    int translate(const string& nod) const
+    {
         map<string, int>::const_iterator it = q.find(nod);
         if (it != q.end())
             return it->second;
         else return -1;
+    }
+    bool stareFinala(int stare) const
+    {
+        return final[stare];
+    }
+    int nodStart() const
+    {
+        return this->start;
     }
 };
 class Sigma
 {
     bool ok = true;
 protected:
-    bool alfabet[257] = {false};
-    public:
-    bool isValid() const
+    bool alfabet[257];
+public:
+    Sigma () {}
+    bool validSigma() const
     {
         return ok;
     }
-    Sigma(const Input &citire) {
+    Sigma(const Input &citire)
+    {
+        for(int i = 0; i < 257; i ++)
+            alfabet[i] = 0;
         char mat[n][15], s;
         citire.Matrice(mat);
-        for (int i = citire.findSigma(); true; i ++)
+        for (int i = citire.findSigma() + 1; true; i ++)
         {
-            if (strcmp("End", mat[i]) == 0)
+            if (strcmp("END", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
@@ -208,12 +248,14 @@ protected:
             alfabet[s] = 1;
         }
     }
-    bool apartineAlfabet(char ch) const {
+    bool apartineAlfabet(char ch) const
+    {
         return alfabet[ch];
     }
 
 };
-struct nu {
+struct nu
+{
     int nod;
     char a;
 };
@@ -223,14 +265,16 @@ class Transitions
 protected:
 
     vector<nu> v[n];
-    public:
-
-    Transitions(const Input &citire, const States &state, const Sigma &sigma) {
+    map<map<string, int>, vector<int>> w;
+public:
+    Transitions() {}
+    Transitions(const Input &citire, const States &state, const Sigma &sigma)
+    {
         char mat[n][15], s[15];
         citire.Matrice(mat);
-        for (int i = citire.findTrans(); ok; i ++)
+        for (int i = citire.findTrans() + 1; ok; i ++)
         {
-            if (strcmp("End", mat[i]) == 0)
+            if (strcmp("END", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
@@ -243,91 +287,121 @@ protected:
             {
                 ct ++;
                 strcpy(cuv, p);
-                if (ct == 1 || ct == 3) {
-                    if (state.translate(cuv) == -1) {
+                if (ct == 1 || ct == 3)
+                {
+                    if (state.translate(cuv) == -1)
+                    {
                         ok = false;
                         break;
                     }
                     if (ct == 1)
                         nod = state.translate(cuv);
-                    else v[nod].push_back({nod, litera});
+                    else v[nod].push_back({state.translate(cuv), litera});
                 }
-                else if (strlen(cuv) > 1 || sigma.apartineAlfabet(cuv[0]))
+                else if (strlen(cuv) > 1 || !sigma.apartineAlfabet(cuv[0]))
                     ok = false;
                 else litera = cuv[0];
+                p = strtok(NULL, ", ");
             }
         }
-    }
-    void trimiteMuchii(vector <nu> w[n]) const {
-        for (int i = 0; i < n; i ++) {
-            for (int j = 0; j < v[i].size(); j ++) {
+    }/**
+    void trimiteMuchii(vector <nu> w[n]) const
+    {
+        for (int i = 0; i < n; i ++)
+        {
+            for (int j = 0; j < v[i].size(); j ++)
+            {
                 w[i].push_back(v[i][j]);
             }
         }
+    }*/
+    void toAFD()
+    {
+        bool auxf[n];
+        for(int i = 0; i < n; i ++)
+            auxf[i] = 0;
+        ///namchef
     }
-    bool isValid() const
+    bool validTransitions() const
     {
         return ok;
+    }
+    char caracter(int stare, int i) const
+    {
+        return v[stare][i].a;
+    }
+    int Size(int stare)const
+    {
+        return v[stare].size();
+    }
+    int nod(int stare, int i) const
+    {
+        return v[stare][i].nod;
     }
 
 };
 class Automat
 {
+    States S;
+    Transitions T;
+    Sigma A;
     bool ok = true;
-
-    vector<nu> v[n];
-    public:
-    Automat(){}
-    Automat(const States &state, const Sigma &sigma, const Transitions &trans)
-    {
-        bool ok = 0;
-        ok = ok & state.isValid() & sigma.isValid() & trans.isValid();
-
-        if(!ok)
-            cout << "Automat invalid\n", this->ok = 0;
-        trans.trimiteMuchii(v);
-        state.
-
-    }
-    bool cuvant(char cuv[]) {
-        dfs(valid, cuv, 1, 0, strlen(cuv));
-    }
-    void dfs(bool valid, char cuv[], int stare, int poz, int len) const
+    void dfs(bool &valid, char cuv[], int stare, int poz, int len) const
     {
         if (valid)
             return;
         if (poz == len)
         {
-            if (Final[stare] == 1)
+            if (S.stareFinala(stare))
                 valid = true;
             return;
         }
-        for (int i = 0; i < v[stare].size(); i++)
+        for (int i = 0; i < T.Size(stare); i++)
         {
-            if (!valid && v[stare][i].a == cuv[poz])
-                dfs(cuv, v[stare][i].nod, poz + 1, len);
+            char ch = T.caracter(stare, i);
+            int nod = T.nod(stare, i);
+            if (!valid && (ch == cuv[poz] || ch == '$'))
+                dfs(valid, cuv, nod, poz + 1, len);
         }
+    }
+public:
+    Automat() {}
+    Automat(const Input &citire): S(citire),A(citire)
+    {
+        T = Transitions{citire, S, A};
+        bool ok = 1;
+        ok = ok & S.validStates() & A.validSigma() & T.validTransitions();
+        if(!ok)
+            cout << "Automat invalid\n", this->ok = 0;
+    }
+    Automat(const States &state, const Sigma &sigma, const Transitions &trans)
+    {
+        bool ok = 1;
+        ok = ok & state.validStates() & sigma.validSigma() & trans.validTransitions();
+        if(!ok)
+            cout << "Automat invalid\n", this->ok = 0;
+        S = state, A = sigma, T = trans;
+
+    }
+    bool cuvant(char cuv[])
+    {
+        bool valid = 0;
+        dfs(valid, cuv, S.nodStart(), 0, strlen(cuv));
+        return valid;
+    }
+    bool isValid()
+    {
+        return ok;
     }
 };
 
 int main()
 {
+    Automat a;
+
+    Input citire("input.txt");
+    a = Automat{citire};
     cin >> cuv;
-    valid = true;
-    ifstream f("input.txt");
-    while (f.getline(mat[++i], sizeof(mat[i])));
-    State();
-    sigma();
-    Transition();
-    if (valid == 0 || v1 == 0 || v2 == 0)
-    {cout << "Automat invalid";}
-    else {
-        cout << "Introdu un cuvant:\n";
-        cin >> cuv;
-        dfs(cuv, start, 0, strlen(cuv));
-        if (valid == 0)
-            cout << "Cuvant invalid";
-        else cout << "Cuvant valid";
-    }
+    cout << a.cuvant(cuv);
     return 0;
 }
