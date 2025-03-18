@@ -1,27 +1,29 @@
-#alupei
-#aluprunu
-
-States:
-alupei, S, F
-2
-3
-4
-5, F
-#6
-END
 Sigma:
 a
-#d
 b
 c
-END
+End
+#
+#
+States:
+q0 , S
+q1
+q2
+q3
+q4 , F
+q5
+End
+# an o t he r comment
+#
 Transitions:
-alupei, a, 2
-2, a, alupei
-2, b, 2
-2, a, 3
-3, a, 4
-4, a, 5
-5, b, 2
-4, b, alupei
-END
+q0 , a , q1
+q0 , b , q2
+q0 , c , q3
+q1 , b , q2
+q2 , a , q3
+q1 , c , q4
+q2 , b , q4
+q3 , a , q4
+q4 , a , q5
+q5 , a , q4
+End

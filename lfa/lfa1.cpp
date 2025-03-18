@@ -4,11 +4,11 @@
 #include <fstream>
 #include <map>
 using namespace std;
-const int n = 100;
+const int n = 5000, m = 100;
 char cuv[n];
 class Input
 {
-    char mat[n][15] = {'\0'};
+    char mat[n][m] = {'\0'};
     ///bool ok = true;
 public:
     Input() {}
@@ -18,7 +18,7 @@ public:
         int ct = 0, i = 0;
         char c[200];
         while (f.getline(mat[++i], sizeof(mat[i])) && ct - 3)
-            ct +=  (strcmp(mat[i], "END") == 0);
+            ct +=  (strcmp(mat[i], "End") == 0);
     }
     int findState() const
     {
@@ -38,7 +38,7 @@ public:
             if(strcmp(mat[i], "Sigma:") == 0)
                 return i;
     }
-    void Matrice(char copie[][15]) const
+    void Matrice(char copie[][m]) const
     {
         for (int i = 0; i < n; i++)
         {
@@ -76,14 +76,14 @@ public:
     {
         for(int i = 0; i < n; i ++)
             final[i] = 0;
-        char mat[n][15], cuv[15];
+        char mat[n][m], cuv[m];
         citire.Matrice(mat);
-        char s[15];
+        char s[m];
         int ct = 0;
         bool existaStart = false;
         for (int i = citire.findState() + 1; true; i ++)
         {
-            if (strcmp("END", mat[i]) == 0)
+            if (strcmp("End", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
@@ -165,11 +165,11 @@ public:
     {
         for(int i = 0; i < 257; i ++)
             alfabet[i] = 0;
-        char mat[n][15], s;
+        char mat[n][m], s;
         citire.Matrice(mat);
         for (int i = citire.findSigma() + 1; true; i ++)
         {
-            if (strcmp("END", mat[i]) == 0)
+            if (strcmp("End", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
@@ -212,16 +212,16 @@ public:
     Transitions() {}
     Transitions(const Input &citire, const States &state, const Sigma &sigma)
     {
-        char mat[n][15], s[15];
+        char mat[n][m], s[m];
         citire.Matrice(mat);
         for (int i = citire.findTrans() + 1; ok; i ++)
         {
-            if (strcmp("END", mat[i]) == 0)
+            if (strcmp("End", mat[i]) == 0)
                 break;
             if(mat[i][0] == '#')
                 continue;
             strcpy(s, mat[i]);
-            char *p = strtok(s, ", "), cuv[15];
+            char *p = strtok(s, ", "), cuv[m];
             int nod;
             char litera;
             int ct = 0;
