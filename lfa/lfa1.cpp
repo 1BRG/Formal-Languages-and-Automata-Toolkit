@@ -53,8 +53,9 @@ public:
         os << "Transitions incepe la linia: " << a.findTrans() << "\n";
         return os;
     }
-    ~Input() //cout << "Destructor";
+    ~Input()
     {
+        //cout << "Destructor";
     }
 
 };
@@ -144,8 +145,9 @@ public:
         os << "\n";
         return os;
     }
-    ~States() //cout << "Destructor";
+    ~States()
     {
+        //cout << "Destructor";
     }
 };
 class Sigma
@@ -188,8 +190,9 @@ public:
         os << "\n";
         return os;
     }
-    ~Sigma() //cout << "Destructor";
+    ~Sigma()
     {
+        //cout << "Destructor";
     }
 
 };
@@ -290,8 +293,9 @@ public:
             }
             return os;
     }
-    ~Transitions() //cout << "Destructor";
+    ~Transitions()
     {
+        //cout << "Destructor";
     }
 
 };
@@ -347,8 +351,9 @@ public:
     {
         return ok;
     }
-    ~Automat() //cout << "Destructor";
+    ~Automat()
     {
+        //cout << "Destructor";
     }
 };
 
