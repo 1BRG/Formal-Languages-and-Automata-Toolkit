@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <string.h>
+#include <cstring>
 #include <fstream>
 #include <map>
 using namespace std;
-const int n = 5000;
+const int n = 100;
 char cuv[n];
 class Input
 {
@@ -16,27 +16,29 @@ public:
     {
         ifstream f(filename);
         int ct = 0, i = 0;
-        char c[200];
         while (f.getline(mat[++i], sizeof(mat[i])) && ct - 3)
             ct +=  (strcmp(mat[i], "END") == 0);
     }
     int findState() const
     {
-        for(int i = 0; true; i ++)
+        for(int i = 0; i < n; i ++)
             if(strcmp(mat[i], "States:") == 0)
                 return i;
+        return -1;
     }
     int findTrans() const
     {
-        for(int i = 0; true; i ++)
+        for(int i = 0; i < n; i ++)
             if(strcmp(mat[i], "Transitions:") == 0)
                 return i;
+        return -1;
     }
     int findSigma() const
     {
-        for(int i = 0; true; i ++)
+        for(int i = 0; i < n; i ++)
             if(strcmp(mat[i], "Sigma:") == 0)
                 return i;
+        return -1;
     }
     void Matrice(char copie[][15]) const
     {
@@ -63,12 +65,12 @@ public:
     {
         for(int i = 0; i < n; i ++)
             final[i] = 0;
-        char mat[n][15], cuv[15];
+        char mat[n][15] = citire.Matrice();, cuv[15];
         citire.Matrice(mat);
         char s[15];
         int ct = 0;
         bool existaStart = false;
-        for (int i = citire.findState() + 1; true; i ++)
+        for (int i = citire.findState() + 1; i < n; i ++)
         {
             if (strcmp("END", mat[i]) == 0)
                 break;
@@ -131,7 +133,7 @@ public:
             alfabet[i] = 0;
         char mat[n][15], s;
         citire.Matrice(mat);
-        for (int i = citire.findSigma() + 1; true; i ++)
+        for (int i = citire.findSigma() + 1; i < n; i ++)
         {
             if (strcmp("END", mat[i]) == 0)
                 break;
@@ -267,13 +269,12 @@ public:
         if(!ok)
             cout << "Automat invalid\n", this->ok = 0;
     }
-    Automat(const States &state, const Sigma &sigma, const Transitions &trans)
+    Automat(const States &state, const Sigma &sigma, const Transitions &trans): S(state), A(sigma), T(trans)
     {
         bool ok = 1;
         ok = ok & state.validStates() & sigma.validSigma() & trans.validTransitions();
         if(!ok)
             cout << "Automat invalid\n", this->ok = 0;
-        S = state, A = sigma, T = trans;
 
     }
     bool cuvant(char cuv[])
@@ -282,7 +283,7 @@ public:
         dfs(valid, cuv, S.nodStart(), 0, strlen(cuv));
         return valid;
     }
-    bool isValid()
+    bool isValid() const
     {
         return ok;
     }
@@ -292,7 +293,7 @@ int main()
 {
     Automat a;
 
-    Input citire("input.txt");
+    Input citire("../input.txt");
     a = Automat{citire};
     cin >> cuv;
     cout << a.cuvant(cuv);

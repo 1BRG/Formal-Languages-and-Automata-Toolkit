@@ -1,0 +1,27 @@
+#alupei
+#aluprunu
+
+States:
+alupei, S, F
+2
+3
+4
+5, F
+#6
+END
+Sigma:
+a
+#d
+b
+c
+END
+Transitions:
+alupei, a, 2
+2, a, alupei
+2, b, 2
+2, a, 3
+3, a, 4
+4, a, 5
+5, b, 2
+4, b, alupei
+END
