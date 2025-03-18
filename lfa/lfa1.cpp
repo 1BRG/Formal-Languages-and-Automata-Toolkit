@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <cstring>
+#include <string.h>
 #include <fstream>
 #include <map>
 using namespace std;
@@ -16,29 +16,27 @@ public:
     {
         ifstream f(filename);
         int ct = 0, i = 0;
+        char c[200];
         while (f.getline(mat[++i], sizeof(mat[i])) && ct - 3)
             ct +=  (strcmp(mat[i], "END") == 0);
     }
     int findState() const
     {
-        for(int i = 0; i < n; i ++)
+        for(int i = 0; true; i ++)
             if(strcmp(mat[i], "States:") == 0)
                 return i;
-        return -1;
     }
     int findTrans() const
     {
-        for(int i = 0; i < n; i ++)
+        for(int i = 0; true; i ++)
             if(strcmp(mat[i], "Transitions:") == 0)
                 return i;
-        return -1;
     }
     int findSigma() const
     {
-        for(int i = 0; i < n; i ++)
+        for(int i = 0; true; i ++)
             if(strcmp(mat[i], "Sigma:") == 0)
                 return i;
-        return -1;
     }
     void Matrice(char copie[][15]) const
     {
@@ -47,6 +45,18 @@ public:
             strcpy(copie[i], mat[i]);
         }
     }
+    friend ostream& operator<<(ostream& os, const Input& a)
+    {
+        os << "Despre input \n";
+        os << "States incepe la linia: " << a.findState() << "\n";
+        os << "Sigma incepe la linia: " << a.findSigma() << "\n";
+        os << "Transitions incepe la linia: " << a.findTrans() << "\n";
+        return os;
+    }
+    ~Input() //cout << "Destructor";
+    {
+    }
+
 };
 class States
 {
@@ -65,12 +75,12 @@ public:
     {
         for(int i = 0; i < n; i ++)
             final[i] = 0;
-        char mat[n][15] = citire.Matrice();, cuv[15];
+        char mat[n][15], cuv[15];
         citire.Matrice(mat);
         char s[15];
         int ct = 0;
         bool existaStart = false;
-        for (int i = citire.findState() + 1; i < n; i ++)
+        for (int i = citire.findState() + 1; true; i ++)
         {
             if (strcmp("END", mat[i]) == 0)
                 break;
@@ -115,6 +125,28 @@ public:
     {
         return this->start;
     }
+    friend ostream& operator<<(ostream& os, const States &a)
+    {
+        os << "Despre States:\n";
+        if(a.ok == false || (a.start == 0 ))
+        {
+            os << "States invalid\n";
+            return os;
+        }
+        os << "Nod de start: " << a.start << "\n";
+        os << "Noduri de final: ";
+        int ct = 0;
+        for(int i = 0; i < n; i ++)
+            if(a.final[i])
+                os << i << " ", ct += 1;
+        if(!ct)
+            os << "Automatul nu are stari finale";
+        os << "\n";
+        return os;
+    }
+    ~States() //cout << "Destructor";
+    {
+    }
 };
 class Sigma
 {
@@ -133,7 +165,7 @@ public:
             alfabet[i] = 0;
         char mat[n][15], s;
         citire.Matrice(mat);
-        for (int i = citire.findSigma() + 1; i < n; i ++)
+        for (int i = citire.findSigma() + 1; true; i ++)
         {
             if (strcmp("END", mat[i]) == 0)
                 break;
@@ -146,6 +178,18 @@ public:
     bool apartineAlfabet(char ch) const
     {
         return alfabet[ch];
+    }
+    friend ostream& operator<<(ostream& os, const Sigma &a)
+    {
+        os << "Alfabet: ";
+        for(int i = 0; i < 255; i ++)
+            if(a.alfabet[i])
+                os << char(i) << " ";
+        os << "\n";
+        return os;
+    }
+    ~Sigma() //cout << "Destructor";
+    {
     }
 
 };
@@ -160,7 +204,7 @@ class Transitions
 protected:
 
     vector<nu> v[n];
-    map<map<string, int>, vector<int>> w;
+    //  map<map<string, int>, vector<int>> w;
 public:
     Transitions() {}
     Transitions(const Input &citire, const States &state, const Sigma &sigma)
@@ -233,6 +277,22 @@ public:
     {
         return v[stare][i].nod;
     }
+    friend ostream& operator<<(ostream& os, const Transitions &a)
+    {
+        os << "Despre Transitions: \n";
+        for(int i = 0; i < n; i ++)
+            if(a.v[i].size() != 0)
+            {
+                os << i << ": ";
+                for(int j = 0; j < a.v[i].size(); j ++)
+                    os << "[" << a.v[i][j].a << "," << a.v[i][j].nod << "] ";
+                os << "\n";
+            }
+            return os;
+    }
+    ~Transitions() //cout << "Destructor";
+    {
+    }
 
 };
 class Automat
@@ -269,7 +329,7 @@ public:
         if(!ok)
             cout << "Automat invalid\n", this->ok = 0;
     }
-    Automat(const States &state, const Sigma &sigma, const Transitions &trans): S(state), A(sigma), T(trans)
+    Automat(const States &state, const Sigma &sigma, const Transitions &trans):S(state), A(sigma), T(trans)
     {
         bool ok = 1;
         ok = ok & state.validStates() & sigma.validSigma() & trans.validTransitions();
@@ -283,9 +343,12 @@ public:
         dfs(valid, cuv, S.nodStart(), 0, strlen(cuv));
         return valid;
     }
-    bool isValid() const
+    bool isValid()
     {
         return ok;
+    }
+    ~Automat() //cout << "Destructor";
+    {
     }
 };
 
@@ -294,6 +357,13 @@ int main()
     Automat a;
 
     Input citire("../input.txt");
+    cout << citire << "\n";
+    States S(citire);
+    cout << S << "\n";
+    Sigma A(citire);
+    cout << A << "\n";
+    Transitions T(citire, S, A);
+    cout << T << "\n";
     a = Automat{citire};
     cin >> cuv;
     cout << a.cuvant(cuv);
