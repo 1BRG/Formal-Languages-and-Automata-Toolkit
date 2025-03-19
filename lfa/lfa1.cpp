@@ -6,11 +6,10 @@
 #include <map>
 #include <set>
 using namespace std;
-const int n = 2000, m = 50;
-char cuv[n];
 class Input
 {
-    char mat[n][m] = {'\0'};
+    static const int n = 2000, m = 50;
+    string mat[n];
     ///bool ok = true;
 public:
     Input() {}
@@ -19,33 +18,31 @@ public:
         ifstream f(filename);
         int ct = 0, i = 0;
         char c[200];
-        while (f.getline(mat[++i], sizeof(mat[i])) && ct - 3)
-            ct +=  (strcmp(mat[i], "End") == 0);
+        while (getline(f, mat[++i]) && ct - 3)
+            ct += (mat[i] == "End");
     }
     int findState() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "States:") == 0)
+            if(mat[i] == "States:")
                 return i;
     }
     int findTrans() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "Transitions:") == 0)
+            if(mat[i] == "Transitions:")
                 return i;
     }
     int findSigma() const
     {
         for(int i = 0; true; i ++)
-            if(strcmp(mat[i], "Sigma:") == 0)
+            if(mat[i] == "Sigma:")
                 return i;
     }
-    void Matrice(char copie[][m]) const
+    void Matrice(string copie[]) const
     {
         for (int i = 0; i < n; i++)
-        {
-            strcpy(copie[i], mat[i]);
-        }
+            copie[i] = mat[i];
     }
     friend ostream& operator<<(ostream& os, const Input& a)
     {
@@ -55,6 +52,12 @@ public:
         os << "Transitions incepe la linia: " << a.findTrans() << "\n";
         return os;
     }
+    Input& operator=(const Input& other) {
+        std::cout << "Operator egal\n";
+        for (int i = 0; i < n; i ++)
+            this->mat[i] = other.mat[i];
+        return *this;
+    }
     ~Input()
     {
         //cout << "Destructor";
@@ -63,6 +66,7 @@ public:
 };
 class States
 {
+    static const int n = 2000, m = 50;
     bool ok = true;
     map<string, int> q;
 protected:
@@ -81,18 +85,18 @@ public:
     {
         for(int i = 0; i < n; i ++)
             final[i] = false;
-        char mat[n][m];
+        string mat[n];
         citire.Matrice(mat);
         char s[m];
         int ct = 0;
         bool existaStart = false;
         for (int i = citire.findState() + 1; true; i ++)
         {
-            if (strcmp("End", mat[i]) == 0)
+            if (mat[i] == "End")
                 break;
             if(mat[i][0] == '#')
                 continue;
-            strcpy(s, mat[i]);
+            strcpy(s, mat[i].c_str());
             char *p = strtok(s, ", ");
             int nod;
             int ct1 = 0;
@@ -162,6 +166,7 @@ public:
 };
 class Sigma
 {
+    static const int n = 2000, m = 50;
     bool ok = true;
 protected:
     bool alfabet[257];
@@ -175,11 +180,12 @@ public:
     {
         for(int i = 0; i < 257; i ++)
             alfabet[i] = 0;
-        char mat[n][m], s;
+        string mat[n];
+        char s;
         citire.Matrice(mat);
         for (int i = citire.findSigma() + 1; true; i ++)
         {
-            if (strcmp("End", mat[i]) == 0)
+            if (mat[i] == "End")
                 break;
             if(mat[i][0] == '#')
                 continue;
@@ -213,6 +219,8 @@ struct nu
 };
 class Transitions
 {
+    static const int n = 2000, m = 50;
+    char cuv[n];
     bool ok = true;
     bool dfa = true;
     int ct = 0;
@@ -238,15 +246,16 @@ public:
     }
     Transitions(const Input &citire, const States &state, const Sigma &sigma)
     {
-        char mat[n][m], s[m];
+        char s[m];
+        string mat[n];
         citire.Matrice(mat);
         for (int i = citire.findTrans() + 1; ok; i ++)
         {
-            if (strcmp("End", mat[i]) == 0)
+            if (mat[i] == "End")
                 break;
             if(mat[i][0] == '#')
                 continue;
-            strcpy(s, mat[i]);
+            strcpy(s, mat[i].c_str());
             char *p = strtok(s, ", "), cuv[m];
             int nod;
             char litera;
@@ -284,6 +293,7 @@ public:
     {
         for (int i = 0; i < 255; i ++)
         {
+            if (this->w[i].size() > 0)
             w[i] = this->w[i];
         }
     }
@@ -345,6 +355,7 @@ public:
 
 class Automat
 {
+    static const int n = 2000, m = 50;
     States S;
     Transitions T;
     Sigma A;
@@ -421,7 +432,7 @@ public:
         map<long long, map<char, set<int>>> hash;
         // daca hash a mai fost vizitat
         map<long long, bool> viz;
-        map<long long, bool> viz1;
+       // map<long long, bool> viz1;
         // din hash in nod
         map<long long, int> trad;
 
@@ -434,8 +445,9 @@ public:
         //     hash[S.nodStart()][i->first] = i->second;
         for (int i = 0; i < n; i ++) {
             if (!w[i].empty())
-                hash[i] = w[i];
+                hash[i] = w[i], w[i].clear();
         }
+
         //[1], alcatuirea hashului
         hash[S.nodStart()][1].insert(S.nodStart());
         trad[S.nodStart()] = ++ct;
@@ -488,7 +500,7 @@ public:
                     q.push_back(node);
                     trad[node] = ++ct;
                     aux[trad[nod]].push_back({ct, i->first});
-                    auxf[ct] = 1;
+                    auxf[ct] = ok;
                 }
                 else
                 {
@@ -502,7 +514,7 @@ public:
     }
     friend ostream& operator<<(ostream& os, const Automat &a)
     {
-        os << "Despre Transitions: \n";
+        os << "Despre Automat: \n";
         os << a.S << "\n" << a.A << "\n" << a.T << "\n";
         return os;
     }
@@ -514,9 +526,13 @@ public:
 
 int main()
 {
+    const int n = 2000, m = 50;
+    char cuv[n];
     Automat a;
 
-    Input citire("../input.txt");
+    Input citire_aux("../input.txt");
+    Input citire;
+    citire = citire_aux;
     // cout << citire << "\n";
     States S{citire};
     // cout << S << "\n";
