@@ -333,6 +333,7 @@ public:
         {
             this->v[i] =v[i];
         }
+        dfa = true;
 
     }
     ~Transitions()
