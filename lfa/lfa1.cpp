@@ -53,10 +53,15 @@ public:
         return os;
     }
     Input& operator=(const Input& other) {
-        std::cout << "Operator egal\n";
+       // std::cout << "Operator egal\n";
         for (int i = 0; i < n; i ++)
             this->mat[i] = other.mat[i];
         return *this;
+    }
+    Input(const Input& other) {
+        //std::cout << "Constructor de Copiere\n";
+        for (int i = 0; i < n; i ++)
+            this->mat[i] = other.mat[i];
     }
     ~Input()
     {
@@ -73,6 +78,23 @@ protected:
     int start = 0;
     bool final[n] = {false};
 public:
+    States& operator=(const States& other) {
+        // std::cout << "Operator egal\n";
+        for (int i = 0; i < n; i ++)
+            this->final[i] = other.final[i];
+        this->start = other.start;
+        this->ok = other.ok;
+        this->q = other.q;
+        return *this;
+    }
+    States(const States& other) {
+        //std::cout << "Constructor de Copiere\n";
+        for (int i = 0; i < n; i ++)
+            this->final[i] = other.final[i];
+        this->start = other.start;
+        this->ok = other.ok;
+        this->q = other.q;
+    }
     States() {}
     States(int start, bool final[])
     {
@@ -159,6 +181,7 @@ public:
         os << "\n";
         return os;
     }
+
     ~States()
     {
         //cout << "Destructor";
@@ -171,6 +194,19 @@ class Sigma
 protected:
     bool alfabet[257];
 public:
+    Sigma& operator=(const Sigma& other) {
+        // std::cout << "Operator egal\n";
+        for (int i = 0; i < 257; i ++)
+           this->alfabet[i] = other.alfabet[i];
+        this->ok = other.ok;
+        return *this;
+    }
+    Sigma(const Sigma& other) {
+        //std::cout << "Constructor de Copiere\n";
+        for (int i = 0; i < 257; i ++)
+            this->alfabet[i] = other.alfabet[i];
+        this->ok = other.ok;
+    }
     Sigma () {}
     bool validSigma() const
     {
@@ -232,6 +268,23 @@ protected:
     map<char, set<int>> w[n];
 
 public:
+    Transitions& operator=(const Transitions& other) {
+        // std::cout << "Operator egal\n";
+        this->ok = other.ok;
+        this->dfa = other.dfa;
+        this->ct = other.ct;
+        for (int i = 0; i < n; i ++)
+            this->v[i] = other.v[i], this->w[i] = other.w[i], this->cuv[i] = other.cuv[i];
+        return *this;
+    }
+    Transitions(const Transitions& other) {
+        //std::cout << "Constructor de Copiere\n";
+        this->ok = other.ok;
+        this->dfa = other.dfa;
+        this->ct = other.ct;
+        for (int i = 0; i < n; i ++)
+            this->v[i] = other.v[i], this->w[i] = other.w[i], this->cuv[i] = other.cuv[i];
+    }
     Transitions() {}
     Transitions(const vector<nu> v[n])
     {
@@ -380,6 +433,21 @@ class Automat
         }
     }
 public:
+    Automat& operator=(const Automat& other) {
+        // std::cout << "Operator egal\n";
+        this->S = other.S;
+        this->T = other.T;
+        this->A = other.A;
+        this->ok = other.ok;
+        return *this;
+    }
+    Automat(const Automat& other) {
+        //std::cout << "Constructor de Copiere\n";
+        this->S = other.S;
+        this->T = other.T;
+        this->A = other.A;
+        this->ok = other.ok;
+    }
     Automat() {}
     Automat(const Input &citire): S(citire),A(citire)
     {
@@ -528,7 +596,7 @@ int main()
 {
     const int n = 2000, m = 50;
     char cuv[n];
-    Automat a;
+    Automat a, b;
 
     Input citire_aux("../input.txt");
     Input citire;
@@ -542,8 +610,10 @@ int main()
 
     // cout << T << "\n";
     a = Automat{citire};
-    cout << a;
+    b = a;
+    cout << b;
     a.toDFA();
+    cout << "\n\n Automat to DFA\n\n";
     cout << a;
     cin >> cuv;
     cout << a.cuvant(cuv);
