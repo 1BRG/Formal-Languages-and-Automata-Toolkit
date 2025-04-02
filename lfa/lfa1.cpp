@@ -12,12 +12,12 @@ class Input
     string mat[n];
     ///bool ok = true;
 public:
-    Input() {}
-    Input(const string &filename)
+    Input() = default;
+
+    explicit Input(const string &filename)
     {
         ifstream f(filename);
         int ct = 0, i = 0;
-        char c[200];
         while (getline(f, mat[++i]) && ct - 3)
             ct += (mat[i] == "End");
     }
@@ -95,11 +95,11 @@ public:
         this->ok = other.ok;
         this->q = other.q;
     }
-    States() {}
-    States(int start, bool final[])
+    States() = default;
+    States(int start, bool final1[])
     {
         this->start = start;
-        memcpy(this->final, final, sizeof(final));
+        memcpy(this->final, final1,  sizeof(final));
         for (int i = 0; i < n; i ++)
             q[to_string(i)] = i;
     }
@@ -226,12 +226,12 @@ public:
             if(mat[i][0] == '#')
                 continue;
             s = mat[i][0];
-            alfabet[s] = 1;
+            alfabet[int(s)] = 1;
         }
     }
     bool apartineAlfabet(char ch) const
     {
-        return alfabet[ch];
+        return alfabet[int(ch)];
     }
     friend ostream& operator<<(ostream& os, const Sigma &a)
     {
@@ -418,7 +418,7 @@ class Automat
     {
         if (valid)
             return;
-        if (poz == len)
+        if (poz == len )
         {
             if (S.stareFinala(stare))
                 valid = true;
@@ -506,45 +506,53 @@ public:
 
         const int b = 5009, mod = 1e9 + 7;
         int ct = 0;
-        // T.toDFA();
         deque<long long> q;
         q.push_back(S.nodStart());
-        // for (map<char, set<int>> :: iterator i = w[S.nodStart()].begin(); i != w[S.nodStart()].end(); i ++)
-        //     hash[S.nodStart()][i->first] = i->second;
+
         for (int i = 0; i < n; i ++) {
             if (!w[i].empty())
                 hash[i] = w[i], w[i].clear();
         }
 
-        //[1], alcatuirea hashului
         hash[S.nodStart()][1].insert(S.nodStart());
         trad[S.nodStart()] = ++ct;
+        /*
+        for (map<char, set<int>> :: iterator j = hash[3].begin(); j != hash[3].end(); j ++) {
+            cout << j->first << ":   ";
+            for (set<int>:: iterator p = j->second.begin(); p != j->second.end(); p ++) {
+                cout << *p << " ";
+                ok = ok | S.stareFinala(*p);
+            }
+            cout << "\n";
+        }
+        */
         while (!q.empty())
         {
             int nod = q.front();
             q.pop_front();
 
+
+/*
+                cout << "Componeneta nodului " << nod << ":\n";
+                bool ok = false;
+                for (map<char, set<int>> :: iterator j = hash[nod].begin(); j != hash[nod].end(); j ++) {
+                    cout << j->first << ":   ";
+                    for (set<int>:: iterator p = j->second.begin(); p != j->second.end(); p ++) {
+                        cout << *p << " ";
+                        ok = ok | S.stareFinala(*p);
+                    }
+                    cout << "\n";
+                    break;
+                }
+
+*/
             viz[nod] = true;
             map<char, set<int>> dest;
-            // for (map<char, set<int>> :: iterator i = hash[nod].begin(); i != hash[nod].end(); i ++)
-            //     dest[i->first].insert(i->second.begin(), i->second.end());
             for (set<int> :: iterator i = hash[nod][1].begin(); i != hash[nod][1].end(); i ++)
-                // if (*i < n)
-                //     for (map<char, set<int>> :: iterator j = w[*i].begin(); j != w[*i].end(); j ++)
-                //     {
-                //         dest[j ->first].insert(j->second.begin(), j->second.end());
-                //     }
-                // else
-                    // if (viz1[*i] == 1)
                         for (map<char, set<int>> :: iterator j = hash[*i].begin(); j != hash[*i].end(); j ++) {
                             if (j->first != 1)
                                 dest[j ->first].insert(j->second.begin(), j->second.end());
                         }
-                    // for (map<char, set<int>> :: iterator j = hash[*i].begin(); j != hash[*i].end(); j ++)
-                    // {
-                    //     dest[j ->first].insert(j->second.begin(), j->second.end());
-                    // }
-
             for (map<char, set<int>> :: iterator i = dest.begin(); i != dest.end(); i ++)
             {
                 long long node = 0;
@@ -553,13 +561,12 @@ public:
                 {
                     ok = ok | S.stareFinala(*j);
                     node *= b, node += *j, node %= mod;
-                    // hash[node][i->first].insert(w[*j][i->first].begin(), w[*j][i->first].end());
                 }
-                if (i->second.size() > 1) {
+             //   if (i->second.size() > 1) {
                     node += n + 1;
-                }
-                else if (i->second.size() == 0)
-                    continue;
+               // }
+              //  else if (i->second.size() == 0)
+                //    continue;
                 if (viz[node] == 0)
                 {
                     hash[node][1].insert(dest[i->first].begin(), dest[i->first].end());
@@ -568,7 +575,7 @@ public:
                     q.push_back(node);
                     trad[node] = ++ct;
                     aux[trad[nod]].push_back({ct, i->first});
-                    auxf[ct] = ok;
+                   // auxf[ct] = ok;
                 }
                 else
                 {
@@ -577,8 +584,24 @@ public:
                 }
             }
         }
-        T.modificareTrans(aux);
+        for (map<long long, int> :: iterator i = trad.begin(); i != trad.end(); i ++) {
+           cout << "Componeneta nodului " << i->second << ":\n";
+            bool ok = false;
+            for (map<char, set<int>> :: iterator j = hash[i->first].begin(); j != hash[i->first].end(); j ++) {
+                cout << j->first << ":   ";
+                for (set<int>:: iterator p = j->second.begin(); p != j->second.end(); p ++) {
+                   cout << *p << " ";
+                    ok = ok | S.stareFinala(*p);
+                }
+                auxf[i->second] = ok;
+                cout << ((ok == 1) ? "final": "") << "\n";
+                break;
+                cout << "\n";
+            }
+            cout << "\n";
+        }
         S = {States {1, auxf}};
+        T.modificareTrans(aux);
     }
     friend ostream& operator<<(ostream& os, const Automat &a)
     {
@@ -591,7 +614,26 @@ public:
         //cout << "Destructor";
     }
 };
-
+int o = 0;
+char cuv[50];
+void back(int k, int n, Automat &a, Automat &b) {
+    if (k <= n + 1) {
+        o ++;
+        cuv[k] = '\0';
+        if (a.cuvant(cuv)  != b.cuvant(cuv))
+        cout << cuv << "\n" << "(?)DFA: " << a.cuvant(cuv) << "\n*NFA: " << b.cuvant(cuv) << "\n\n";
+        //return;
+    }
+    else return;
+    cuv[k - 1] = 'a';
+    back(k + 1, n, a, b);
+    cuv[k - 1] = 'b';
+    back(k + 1, n, a, b);
+    cuv[k - 1] = 'c';
+    back(k + 1, n, a, b);
+    cuv[k - 1] = 'd';
+    back(k + 1, n, a, b);
+}
 int main()
 {
     const int n = 2000, m = 50;
@@ -611,11 +653,19 @@ int main()
     // cout << T << "\n";
     a = Automat{citire};
     b = a;
+    if (a.isValid() == false) {
+        return 0;
+    }
     cout << b;
     a.toDFA();
     cout << "\n\n Automat to DFA\n\n";
     cout << a;
-    cin >> cuv;
-    cout << a.cuvant(cuv);
+    //back(1, 10, a, b);
+    cout << o << "\n";
+    while (true) {
+        cout << "\n\n Introduceti cuvantul pentru verificare:\n\n";
+        cin >> cuv;
+        cout << "(?)DFA: " << a.cuvant(cuv) << "\n*NFA / (DFA initial): " << b.cuvant(cuv) << "\n\n";
+    }
     return 0;
 }
