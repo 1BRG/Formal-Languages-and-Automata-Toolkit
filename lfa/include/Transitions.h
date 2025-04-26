@@ -18,7 +18,7 @@ class Transitions
 {
 
     static const int n = 2000, m = 50;
-    char cuv[n];
+    char cuv[n]{};
     bool ok = true;
     bool dfa = true;
     int ct = 0;
@@ -32,9 +32,10 @@ protected:
 public:
     Transitions& operator=(const Transitions& other);
     Transitions(const Transitions& other);
-    Transitions() {}
-    Transitions(const vector<nu> v[n]);
+    Transitions() = default;
+    explicit Transitions(const vector<nu> v[n]);
     Transitions(const Input &citire, const States &state, const Sigma &sigma);
+    explicit Transitions(char value);
     void getTransition(map<char, set<int>> w[n]) const;
     bool validTransitions() const;
     char caracter(int stare, int i) const;
@@ -44,6 +45,10 @@ public:
     bool isNFA()const;
     friend ostream& operator<<(ostream& os, const Transitions &a);
     void modificareTrans(vector <nu> v[n]);
+    void increaseN(int n);
+    void addTransitions(const vector<int>& stari, vector <int> v);
+    void addTransitions(vector <nu> v[n]);
+    vector<nu> *get_transitions();
     ~Transitions();
 
 };

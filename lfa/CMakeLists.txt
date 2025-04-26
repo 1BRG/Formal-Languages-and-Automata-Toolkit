@@ -15,4 +15,6 @@ add_executable(lfa
         src/Transitions.cpp
         include/Automat.h
         src/Automat.cpp
+        include/json.hpp
+        src/LFA-Assignment2_Regex_DFA.json
 )

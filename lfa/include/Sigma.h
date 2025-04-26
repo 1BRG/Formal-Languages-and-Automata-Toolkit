@@ -18,6 +18,7 @@ public:
     Sigma& operator=(const Sigma& other);
     Sigma(const Sigma& other);
     Sigma () {}
+    Sigma(char value);
     bool validSigma() const;
     Sigma(const Input &citire);
     bool apartineAlfabet(char ch) const;
