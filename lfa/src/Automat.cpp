@@ -204,6 +204,37 @@ ostream &operator<<(ostream &os, const Automat &a) {
     << a.T << "\n";
     return os;
 }
+void Automat::returneaza_nfa(int nod, bool ok[], vector<nu> &aux, vector<nu> v[], bool &esteFinal) {
+    ok[nod] = true;
+    if (S.stareFinala(nod))
+        esteFinal = true;
+    for (int i = 0; i < v[nod].size(); i ++)
+        if (ok[v[nod][i].nod] == false) {
+            if (v[nod][i].a != '$')
+                ok[v[nod][i].nod] = true, aux.push_back(v[nod][i]);
+            else returneaza_nfa(v[nod][i].nod, ok, aux, v, esteFinal);
+        }
+        else if (v[nod][i].a != '$')
+        ok[v[nod][i].nod] = false, aux.push_back(v[nod][i]);
+}
+void Automat::toNFA() {
+    vector<nu> *v, nou[n];
+    vector <int> final;
+    v = T.get_transitions();
+    bool ok[n] = {false};
+    for (int i = 0; i < n; i ++) {
+        bool esteFinal = false;
+        memset(ok, 0, sizeof(ok));
+        vector <nu> aux;
+        returneaza_nfa(i, ok, aux, v, esteFinal);
+        nou[i] = aux;
+        if (esteFinal)
+            final.push_back(i);
+    }
+    T.modificareTrans(nou);
+    S.changeStariFinale(final);
+}
+
 
 void Automat::increaseN(int n) {
     T.increaseN(n);
@@ -211,7 +242,7 @@ void Automat::increaseN(int n) {
 }
 
 vector<nu> *Automat::get_transitions() {
-    return T.get_transitions();;
+    return T.get_transitions();
 }
 
 vector<int> Automat::stareInitiala() {

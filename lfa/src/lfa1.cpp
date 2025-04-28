@@ -130,11 +130,11 @@ string apartine_automat(Automat a, string cuv) {
 }
 Automat toAutomat(deque <string> p) {
     /*
-     TODO: . -> concatenare
-     TODO: | -> alternare
-     TODO: * -> stelat
-     TODO: + -> plus
-     TODO: ? -> misterios
+     : . -> concatenare
+     : | -> alternare
+     : * -> stelat
+     : + -> plus
+     : ? -> misterios
      */
     deque <Automat> q;
     while(!p.empty())
@@ -194,6 +194,10 @@ void tema2()
         parsareRegex(regex);
         q = postfixat(regex);
         Automat a = toAutomat(q);
+       // cout << a;
+        a.toNFA();
+     //   cout << a;
+        a.toDFA();
       //  cout << a << endl;
         for (auto test : ex["test_strings"]) {
             string rez = apartine_automat(a, test["input"]);

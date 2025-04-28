@@ -18,6 +18,7 @@ class Automat
 
     bool ok = true;
     void dfs(bool &valid, char cuv[], int stare, int poz, int len) const;
+    void returneaza_nfa(int nod, bool ok[], vector<nu> &aux, vector<nu> v[], bool &esteFinal);
 public:
     Automat& operator=(const Automat& other);
     Automat(const Automat& other);
@@ -39,7 +40,7 @@ public:
     void plus();
     void misterios();
     void increaseN(int n);
-
+    void toNFA();
     vector<nu> *get_transitions();
     vector<int> stareInitiala();
     vector <int> stariFinale();
