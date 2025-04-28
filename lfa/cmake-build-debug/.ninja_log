@@ -1,13 +1,15 @@
 # ninja log v6
 10	1915	7653073641949991	CMakeFiles/lfa.dir/lfa1.cpp.obj	1c59813455937758
 17	673	7665183296706270	CMakeFiles/lfa.dir/src/Input.cpp.obj	b121226b80cf3d9a
-8	4762	7675303640253205	CMakeFiles/lfa.dir/src/lfa1.cpp.obj	dffe5bb321fb070e
+8	4012	7675326720067663	CMakeFiles/lfa.dir/src/lfa1.cpp.obj	dffe5bb321fb070e
 37	883	7673630807498093	CMakeFiles/lfa.dir/src/Sigma.cpp.obj	f3dc595d7c79f154
-4763	7160	7675303687805773	lfa.exe	a830ecdd0376835c
-18	1925	7675302538592811	CMakeFiles/lfa.dir/src/Automat.cpp.obj	eff22f41e9fc3fbb
+4013	6197	7675326760112300	lfa.exe	a830ecdd0376835c
+18	2294	7675326496995260	CMakeFiles/lfa.dir/src/Automat.cpp.obj	eff22f41e9fc3fbb
 30	1172	7675292607447317	CMakeFiles/lfa.dir/src/States.cpp.obj	c821790c99bfd177
 22	1329	7675293041307469	CMakeFiles/lfa.dir/src/Transitions.cpp.obj	51ec8221f0503b85
-14	4921	7675303904838525	CMakeFiles/lfa.dir/src/lfa1.cpp.obj	dffe5bb321fb070e
-4922	7373	7675303953920442	lfa.exe	a830ecdd0376835c
-8	4700	7675305168652082	CMakeFiles/lfa.dir/src/lfa1.cpp.obj	dffe5bb321fb070e
-4701	7082	7675305215578998	lfa.exe	a830ecdd0376835c
+9	3849	7675327886255364	CMakeFiles/lfa.dir/src/main.cpp.obj	fb5416183f5f3ee7
+3852	6024	7675327924684479	lfa.exe	f1edc9efb7e64ec0
+8	3846	7675328098576429	CMakeFiles/lfa.dir/src/main.cpp.obj	fb5416183f5f3ee7
+3847	5948	7675328136964883	lfa.exe	f1edc9efb7e64ec0
+9	3816	7675328242169888	CMakeFiles/lfa.dir/src/main.cpp.obj	fb5416183f5f3ee7
+3817	5964	7675328280251063	lfa.exe	f1edc9efb7e64ec0

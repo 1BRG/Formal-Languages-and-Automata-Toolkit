@@ -4,7 +4,7 @@ project(lfa)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(lfa
-        src/lfa1.cpp
+        src/main.cpp
         src/Input.cpp
         include/Input.h
         include/States.h

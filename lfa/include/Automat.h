@@ -22,11 +22,22 @@ class Automat
 public:
     Automat& operator=(const Automat& other);
     Automat(const Automat& other);
+
+    static Automat toAutomat(deque<string> p);
+
     Automat() = default;
     explicit Automat(const Input &citire);
     Automat(const States &state, const Sigma &sigma, const Transitions &trans);
 
     explicit Automat(char value);
+
+    static void parsareRegex( string & regex);
+
+    static deque<string> postfixat(string &s);
+
+    explicit Automat(string &regex);
+
+    bool apartine_automat(string &cuv);
 
     bool cuvant(char cuv[]);
     bool isValid();
