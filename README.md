@@ -40,51 +40,38 @@ LFA/                             # Proiect (root în CLion)
 
 ## Cum se rulează codul
 
-### Precondiții
+### CLion (Recomandat)
 
-* Compilator C++17 compatibil (de ex. `g++` >= 7.0)
-* Biblioteca header-only `nlohmann::json` inclusă în `include/json.hpp`
+1. Deschide proiectul în CLion (
+   fila **File → Open** și selectează directorul root al proiectului).
+2. CLion va detecta automat fișierul `CMakeLists.txt` și va configura mediul de build.
+3. Pentru a compila proiectul, apasă **Ctrl+F10** (sau **Build → Build Project**).
+4. Pentru a executa programul, apasă **Shift+F9** (sau configurează o configurație de rulare în **Run → Edit Configurations** și apoi **Run**).
 
-### Build cu Makefile
+### Linux (Terminal + CMake)
 
-În directorul rădăcină al proiectului, rulează:
+1. Asigură-te că ai instalat un compilator C++17 (de ex. `g++`) și CMake.
+2. Deschide un terminal și navighează în directorul root al proiectului.
+3. Creează un director de build și intră în el:
 
-```sh
-make all
-```
-
-Acest lucru va produce executabilul `run_automat`.
-
-Pentru a curăța fișierele obiect generate:
-
-```sh
-make clean
-```
-
-### Executare
-
-1. **Tema 1** (NFA/DFA din text + conversie interactivă):
-
-   ```sh
-   ./run_automat tema1
+   ```bash
+   mkdir -p build && cd build
    ```
+4. Generează fișierele de build cu CMake:
 
-   * Citește definiția automatelor din `input.txt`.
-   * Afișează automatul inițial și DFA-ul rezultat.
-   * Permite introducerea interactivă a cuvintelor pentru testare.
-
-2. **Tema 2** (Regex → DFA + teste automate):
-
-   ```sh
-   ./run_automat tema2
+   ```bash
+   cmake ..
    ```
+5. Compilează proiectul:
 
-   * Încarcă `src/LFA-Assignment2_Regex_DFA.json`.
-   * Convertește expresiile regulate în DFA (utilizând parsare postfix, Thompson, subset construction).
-   * Rulează testele din JSON și raportează rezultatele.
+   ```bash
+   cmake --build .
+   ```
+6. Execută binarul generat (`run_automat`):
 
-> **Notă**: Executabilul analizează argumentul `tema1` sau `tema2` din `argv[1]`. În lipsă, default-ul este `tema2`.
-
+   ```bash
+   ./run_automat tema1   # sau tema2
+   ```
 ## Decizii de implementare
 
 1. **Fără biblioteci externe pentru automate**
