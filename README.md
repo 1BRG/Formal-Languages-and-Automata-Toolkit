@@ -1,107 +1,109 @@
+# Proiect LFA - Tema 1, 2 și 3
+
 ## Structura proiectului
 
-Proiectul este organizat pe module și directoare separate pentru a facilita mentenanța și extensibilitatea:
+Proiectul este organizat pe module și directoare separate:
 
 ```
-LFA/                             # Proiect (root în CLion)
-├── cmake-build-debug/          # Directoriul generat de CLion pentru build
-├── include/                    # Fișiere header (.h/.hpp)
-│   ├── Automat.h
-│   ├── Input.h
-│   ├── Sigma.h
-│   ├── States.h
-│   ├── Transitions.h
-│   └── json.hpp                # Biblioteca nlohmann::json (header-only)
-├── src/                        # Cod sursă și resurse
-│   ├── main.cpp                # Punctul de intrare (tema1 și tema2)
-│   ├── Automat.cpp
-│   ├── Transitions.cpp
-│   ├── States.cpp
-│   ├── Sigma.cpp
-│   ├── Input.cpp
-│   └── LFA-Assignment2_Regex_DFA.json  # Set de teste pentru regex → DFA (tema2)
-├── input.txt                   # Exemplu de configurare NFA/DFA (tema1)
-├── CMakeLists.txt              # Configurație CMake pentru CLion și linie de comandă
-└── README.md                   # Documentația proiectului
+LFA/                             # Root proiect
+├── cmake-build-debug/          # Directory build CLion
+├── include/                    # Headere (.h/.hpp)
+│   ├── Automat.h               # Tema 1-2
+│   ├── Input.h                 # Tema 1-2
+│   ├── Sigma.h                 # Tema 1-2
+│   ├── States.h                # Tema 1-2
+│   ├── Transitions.h           # Tema 1-2
+│   ├── json.hpp                # nlohmann::json
+│   └── CFG.h                   # Tema 3
+├── src/                        # Sursă și resurse
+│   ├── main.cpp                # Punct de intrare (tema1, tema2, tema3, bonus)
+│   ├── Automat.cpp             # Tema 1-2
+│   ├── Transitions.cpp         # Tema 1-2
+│   ├── States.cpp              # Tema 1-2
+│   ├── Sigma.cpp               # Tema 1-2
+│   ├── Input.cpp               # Tema 1-2
+│   ├── CFG.cpp                 # Tema 3
+│   ├── LFA-Assignment2_Regex_DFA.json  # Tema 2 tests
+│   ├── aSb.in                  # CFG S → aSb | ε (tema 3)
+│   └── aNbNcN.in               # CFG „bonus” a^n b^n c^n (tema 3)
+├── input.txt                   # Tema 1 config NFA/DFA
+├── CMakeLists.txt              # Config CMake (toate temele)
+└── README.md                   # Documentație proiect
 ```
-
-### Descrierea principalelor componente
-
-* **main.cpp**: implementează două fluxuri de lucru (`tema1()` și `tema2()`).
-
-  * `tema1()`: citește un NFA/DFA din `input.txt`, îl validează și convertește în DFA, apoi permite testarea interactivă a cuvintelor.
-  * `tema2()`: încarcă un fișier JSON cu expresii regulate și cazuri de test, construiește DFA echivalent și verifică automat apartenența șirurilor.
-* **Automat**: clasa de nivel înalt care orchestrează parsing-ul, construcția NFA, conversia în DFA și metodele de testare a cuvintelor.
-* **States**: gestionează mulțimea de stări, starea inițială și stările finale.
-* **Sigma**: reprezentarea alfabetului acceptat de automat.
-* **Transitions**: stochează și manipulează schema de tranziții (NFA sau DFA), inclusiv tranziții ε.
-* **Input**: citește și parsează configurația din `input.txt`.
-* **json.hpp**: folosit pentru parsarea fișierului JSON de teste (tema2) fără dependințe externe suplimentare.
 
 ## Cum se rulează codul
 
 ### CLion (Recomandat)
 
-1. Deschide proiectul în CLion (
-   fila **File → Open** și selectează directorul root al proiectului).
-2. CLion va detecta automat fișierul `CMakeLists.txt` și va configura mediul de build.
-3. Pentru a compila proiectul, apasă **Ctrl+F10** (sau **Build → Build Project**).
-4. Pentru a executa programul, apasă **Shift+F9** (sau configurează o configurație de rulare în **Run → Edit Configurations** și apoi **Run**).
+1. File → Open → alege directorul root `LFA/`.
+2. Build → Build Project (Ctrl+F10).
+3. Run → Edit Configurations → adaugă configurări pentru `tema1`, `tema2`, `tema3` și `bonusTema3`.
 
-### Linux (Terminal + CMake)
+### Linia de comandă (Linux)
 
-1. Asigură-te că ai instalat un compilator C++17 (de ex. `g++`) și CMake.
-2. Deschide un terminal și navighează în directorul root al proiectului.
-3. Creează un director de build și intră în el:
+```bash
+mkdir -p build && cd build
+cmake ..
+cmake --build .
+# rulează:
+./run_automat tema1        # Tema 1: NFA/DFA din input.txt
+./run_automat tema2        # Tema 2: Regex → DFA (JSON tests)
+./run_automat tema3        # Tema 3: CFG S→aSb|ε (generate, derive, recognize)
+./run_automat bonusTema3   # Bonus: a^n b^n c^n (CFG + procedural verify)
+```
 
-   ```bash
-   mkdir -p build && cd build
-   ```
-4. Generează fișierele de build cu CMake:
+## Descrierea componentelor principale
 
-   ```bash
-   cmake ..
-   ```
-5. Compilează proiectul:
+### Tema 1 și 2 (Automate)
 
-   ```bash
-   cmake --build .
-   ```
-6. Execută binarul generat (`run_automat`):
+* **Automat**: clasa centrală parsează NFA/regex, construiește automat, convertește în DFA.
+* **States, Sigma, Transitions, Input**: suport pentru citire și manipulare automată.
+* **Shunting-Yard & Thompson**: parser regex și construcție NFA.
+* **Subset Construction**: generare DFA.
 
-   ```bash
-   ./run_automat tema1   # sau tema2
-   ```
+### Tema 3 (Context-Free Grammar)
+
+* **CFG.h / CFG.cpp**: clasa `CFG`:
+
+  * Constructor din fișier `aSb.in` (pentru exemplu), dar **poți folosi orice gramatică independentă de context** validă în același format de intrare.
+  * `generate(maxLen, maxCount)`: generează șiruri cu backtracking.
+  * `derivation(target)`: returnează pașii derivării leftmost.
+  * `recognize(target)`: validare membership cu pruning pe prefixe.
+* **main.cpp**: `tema3()` apelează metodele de mai sus și afișează rezultate.
+
+### Bonus (1)
+
+* Fișierul `aNbNcN.in` conține o implementare "simulată" pentru a^n b^n c^n.
+* Funcția `verify()` din `main.cpp` contorizează `a`, `b`, `c` procedural pentru recunoaștere.
+* Comentariul din cod explică de ce limbajul a^n b^n c^n **nu este** context-free (necesită mai mult de o stivă).
+* **Generalitate**: modulul `CFG` poate încărca și procesa orice gramatică independentă de context descrisă conform formatului de intrare (nu doar `aSb`). Dacă fișierul tău de intrare definește un CFG valid, codul tău va genera, deriva și recunoaște șiruri pentru acel CFG.
+
+## Exemple de output pentru tema 3
+
+```bash
+./run_automat tema3
+```
+
+```
+Cuvinte generate de gramatica S→aSb|ε (maxim 10, fiecare max 10 caractere):
+ε
+ab
+aabb
+aba…
+
+Derivarea cuvântului "aaabbb":
+S -> aSb -> aaSbb -> aaaSbbb -> aaabbb
+
+Recunoaștere pentru "aaaabbb": Fals
+```
+
 ## Decizii de implementare
 
-1. **Fără biblioteci externe pentru automate**
+1. **Backtracking manual**: fără librării externe pentru CFG.
+2. **Pruning**: recunoașterea folosește verificarea prefixelor pentru eficiență.
+3. **Structură modulară**: fiecare temă are propriile clase și fișiere.
+4. **CMake**: configurat să includă și tema 3 plus bonus.
 
-   * Toată logica de parsing, construție NFA și conversie în DFA a fost scrisă "from scratch".
+---
 
-2. **Parser regex & Shunting-Yard**
-
-   * Expresia regulată este întâi tokenizată, se inserează operatorul de concatenare implicit (`.`), apoi se transformă în forma postfixată.
-
-3. **Algoritmul lui Thompson**
-
-   * Construcția NFA folosește clase `State`/`nu` și tranziții ε pentru fiecare operator (`*`, `+`, `?`, `|`, `.`).
-
-4. **Construirea DFA**
-
-   * Subset construction (clasă `Automat::toDFA()`): stările DFA sunt mulțimi de stări NFA, calculate prin epsilon-closure.
-
-5. **Gestionarea stărilor și tranzițiilor**
-
-   * `States` folosește `map<string,int>` pentru traducerea numelor de stări din fișier.
-   * `Transitions` stochează vectori de structuri `nu` și un map intern pentru tranziții multiple (pentru NFA).
-
-6. **Testare JSON**
-
-   * Pentru `tema2`, folosește `nlohmann::json` pentru a încărca cazurile de test și a verifica automat rezultatele.
-
-7. **Performanță și limite**
-
-   * Dimensiunea maximă a automatelor este stabilită la `n = 2000` stări și cuvinte de lungime maximă `m = 50`.
-   * Utilizare extensivă a containerelor STL (`vector`, `map`, `set`, `deque`) pentru claritate și siguranță.
-
-
+*Universitatea din București – Automate și Limbaje Formale*
