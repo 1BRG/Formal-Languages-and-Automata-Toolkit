@@ -67,7 +67,7 @@ void tema2()
 }
 
 void tema3() {
-    string filename = "../aSb.in";
+    string filename = "../src/aSb.in";
     ifstream f(filename);
     if (!f.is_open()) {
         cout << "File doesn't exist: " << filename << "\n";
@@ -95,7 +95,16 @@ void tema3() {
     cout << "\n";
 }
 void bonusTema3() {
-    string filename = "../aNbNcN.in";
+    string filename = "../src/aNbNcN.in";
+    ifstream f(filename);
+    if (!f.is_open()) {
+        cout << "File doesn't exist: " << filename << "\n";
+    }
+    /*
+     Gramatica explicata la seminar folosind lema de pompare de ce nu este independenta de context
+     Dar intuitiv ideea este nu putem implementa un automat push_down pentru ca am avea nevoie de doua stive
+     pentru a tine minte numarul de a, b, c si asta rezulta ca gramatica nu e independenta de context
+     */
     CFG b{filename};
     vector <string> cuv = {"aabcc", "aabbc", "aaabbbccc", "bac"};
     for (auto c: cuv) {
@@ -148,5 +157,6 @@ void bonusTema3() {
 }
 int main()
 {
+    tema3();
  bonusTema3();
 }
