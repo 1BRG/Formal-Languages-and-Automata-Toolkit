@@ -85,6 +85,12 @@ build CMakeFiles/lfa.dir/src/Automat.cpp.obj: CXX_COMPILER__lfa_unscanned_Debug 
   OBJECT_DIR = CMakeFiles\lfa.dir
   OBJECT_FILE_DIR = CMakeFiles\lfa.dir\src
 
+build CMakeFiles/lfa.dir/src/CFG.cpp.obj: CXX_COMPILER__lfa_unscanned_Debug D$:/Gabi/github/LFA/lfa/src/CFG.cpp || cmake_object_order_depends_target_lfa
+  DEP_FILE = CMakeFiles\lfa.dir\src\CFG.cpp.obj.d
+  FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\lfa.dir
+  OBJECT_FILE_DIR = CMakeFiles\lfa.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target lfa
@@ -93,7 +99,7 @@ build CMakeFiles/lfa.dir/src/Automat.cpp.obj: CXX_COMPILER__lfa_unscanned_Debug 
 #############################################
 # Link the executable lfa.exe
 
-build lfa.exe: CXX_EXECUTABLE_LINKER__lfa_Debug CMakeFiles/lfa.dir/src/main.cpp.obj CMakeFiles/lfa.dir/src/Input.cpp.obj CMakeFiles/lfa.dir/src/States.cpp.obj CMakeFiles/lfa.dir/src/Sigma.cpp.obj CMakeFiles/lfa.dir/src/Transitions.cpp.obj CMakeFiles/lfa.dir/src/Automat.cpp.obj
+build lfa.exe: CXX_EXECUTABLE_LINKER__lfa_Debug CMakeFiles/lfa.dir/src/main.cpp.obj CMakeFiles/lfa.dir/src/Input.cpp.obj CMakeFiles/lfa.dir/src/States.cpp.obj CMakeFiles/lfa.dir/src/Sigma.cpp.obj CMakeFiles/lfa.dir/src/Transitions.cpp.obj CMakeFiles/lfa.dir/src/Automat.cpp.obj CMakeFiles/lfa.dir/src/CFG.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\lfa.dir

@@ -17,4 +17,6 @@ add_executable(lfa
         src/Automat.cpp
         include/json.hpp
         src/LFA-Assignment2_Regex_DFA.json
+        src/CFG.cpp
+        include/CFG.h
 )

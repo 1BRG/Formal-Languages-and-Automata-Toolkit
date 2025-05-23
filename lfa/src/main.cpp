@@ -7,6 +7,7 @@
 #include <set>
 #include "../include/json.hpp"
 #include "../include/Automat.h"
+#include "../include/CFG.h"
 using namespace std;
 using json = nlohmann::json;
 
@@ -64,7 +65,88 @@ void tema2()
         }
     }
 }
+
+void tema3() {
+    string filename = "../aSb.in";
+    ifstream f(filename);
+    if (!f.is_open()) {
+        cout << "File doesn't exist: " << filename << "\n";
+    }
+    CFG a{filename};
+    vector<string> Gen = a.generate(10, 10);
+    cout << "Cuvinte generate de gramatica (maxim 10 cuvinte, fiecare cu maxim 10 caractere) : \n";
+    for (int i = 0; i < Gen.size(); i ++)
+        cout << i + 1 << ")" << Gen[i] << "\n";
+    string cuv = "aaabbb";
+    vector<string> Der = a.derivation(cuv);
+    cout << "Derivarea cuvantului \"" << cuv << "\"\n";
+    for (int i = 0; i < Der.size(); i ++) {
+        cout << Der[i];
+        if (i != Der.size() - 1)
+            cout << " -> ";
+        else cout << "\n";
+    }
+    string cuv1 = "aaaabbb";
+    bool ok = a.recognize(cuv1);
+    cout << "Cuvantul \"" << cuv1 << "\" apartine gramaticii: ";
+    if (ok == true)
+        cout << "Adevarat";
+    else cout << "Fals";
+    cout << "\n";
+}
+void bonusTema3() {
+    string filename = "../aNbNcN.in";
+    CFG b{filename};
+    vector <string> cuv = {"aabcc", "aabbc", "aaabbbccc", "bac"};
+    for (auto c: cuv) {
+        auto verif = [](string &cuv) {
+            int ct = 0, ct1 = 0;
+            int i = 0;
+            if (cuv.length() < 3)
+                return false;
+            while (cuv[i] == 'a')
+                ct ++, i ++;
+            ct1 = ct;
+            while (cuv[i] == 'b')
+                ct --, i ++;
+            if (ct)
+                return false;
+            while (cuv[i] == 'c')
+                ct ++, i ++;
+            if (ct != ct1)
+                return false;
+            return true;
+        };
+        cout << "Cuvantul \"" << c << "\" apartine gramaticii? \n";
+        cout << "CFG recognizer: ";
+        bool ok = b.recognize(c);
+        if (ok == true)
+            cout << "Adevarat";
+        else cout << "Fals";
+        cout << "\nFunctia de verificare:";
+        bool ok1 = verif(c);
+        if (ok1 == true)
+            cout << "Adevarat";
+        else cout << "Fals";
+        cout << "\n";
+        if (ok1) {
+            cout << "Derivarea este:\n";
+            vector <string> Der = b.derivation(c);
+            for (int i = 0; i < Der.size(); i ++) {
+                cout << Der[i];
+                if (i != Der.size() - 1)
+                    cout << " -> ";
+                else cout << "\n";
+            }
+        }
+        else {
+            cout << "Deci cuvantul NU apartine gramticii!\n";
+        }
+        cout << "\n";
+    }
+
+}
 int main()
 {
- tema2();
+ bonusTema3();
 }
