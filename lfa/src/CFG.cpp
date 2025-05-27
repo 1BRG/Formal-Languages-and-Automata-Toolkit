@@ -8,10 +8,14 @@
 #include <fstream>
 #include <cstring>
 #include <exception>
+#include <iostream>
+
 CFG::CFG(std::string &filename) {
     std::ifstream f(filename.c_str());
     char s[205];
     while (f.getline(s, sizeof(s))) {
+        if (strcmp(s, "") == 0)
+            continue;
         char *p = strtok(s, " ,->|");
         char simbol = *p;
         if (!start)
@@ -56,8 +60,16 @@ CFG::CFG(std::string &filename) {
 
 
 }
+int CFG::nrNonTerminale(const std::string &curr) {
+    int ct = 0;
+    for (char c : curr) {
+        if (!terminal(c))
+            ct++;
+    }
+    return ct;
+}
 bool CFG::terminal(char i) {
-    if ((i <= 'z' && i >= 'a') || i == '$')
+    if (!(i <= 'Z' && i >= 'A'))
         return true;
     return false;
 }
@@ -73,9 +85,10 @@ int CFG::nrTerminale(const std::string &curr) {
 
 void CFG::dfsGen(int maxLen, int maxCt, int &ct, std::vector<std::string> &rez, std::string curr) {
     bool ok = true;
-    if (nrTerminale(curr) > maxLen) {
+    if (curr.size() / 2 > maxLen) {
         return;
     }
+    temp[curr] = true;
     for (int i = 0; curr[i]; i ++) {
         if (!terminal(curr[i]))
         {
@@ -99,7 +112,7 @@ void CFG::dfsGen(int maxLen, int maxCt, int &ct, std::vector<std::string> &rez, 
     }
     if (ok && ct < maxCt) {
         if (curr.length() <= maxLen)
-            rez.push_back(curr);
+            rez.push_back(curr), ct ++;
     }
 }
 std::vector<std::string> CFG::generate(int maxLen, int maxCt) {
@@ -108,6 +121,7 @@ std::vector<std::string> CFG::generate(int maxLen, int maxCt) {
     std::string curr;
     curr += start;
     dfsGen(maxLen, maxCt, total, rez, curr);
+    temp.clear();
     return rez;
 }
 
@@ -146,9 +160,14 @@ bool CFG::potential(const std::string &str, const std::string &tinta) {
     return j == m;
 }
 
+std::ofstream cout("afara");
 void CFG::dfsDer(const std::string &tinta, std::vector<std::string> &rez, std::string &curr, bool &isIn) {
     bool ok = true;
-    if (nrTerminale(curr) > tinta.length()) {
+    if (temp.find(curr) != temp.end())
+        return;
+    temp[curr] = true;
+    cout << curr << "\n";
+    if (nrTerminale(curr) > tinta.length() || nrNonTerminale(curr) > tinta.length()) {
         return;
     }
     for (int i = 0; curr[i]; i ++) {
@@ -187,6 +206,7 @@ std::vector<std::string> CFG::derivation(std::string tinta) {
     curr += start;
     rez.push_back(curr);
     dfsDer(tinta, rez, curr, ok);
+    temp.clear();
     if (!ok)
         return {"Empty"};
     return rez;
@@ -197,6 +217,7 @@ bool CFG::recognize(std::string &tinta) {
     std::string curr;
     curr += start;
     dfsDer(tinta, rez, curr, ok);
+    temp.clear();
     return ok;
 }
 

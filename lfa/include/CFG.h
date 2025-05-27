@@ -12,11 +12,15 @@
 
 class CFG {
     std::map<char, std::vector <std::vector<char>>> prod;
+    std::map<std::string, bool> temp;
     char start{NULL};
     std::set<char> terminale, neterminale;
 public:
     CFG() = default;
     explicit CFG(std::string &filename);
+
+    int nrNonTerminale(const std::string &curr);
+
     static bool terminal(char c);
 
     static int nrTerminale(const std::string & curr);

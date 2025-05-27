@@ -155,8 +155,27 @@ void bonusTema3() {
     }
 
 }
+void cfgOarecare() {
+    string s, filename = "../src/CFG.in";
+    ofstream g(filename);
+    while (getline(cin, s) && s != "STOP")
+        g << s << "\n";
+    g.close();
+    CFG a(filename);
+    while (getline(cin , s) && s != "STOP") {
+        cout << "CFG recognizer: ";
+        bool ok = a.recognize(s);
+        cout << "Cuvantul \"" << s << "\" apartine gramaticii: ";
+        if (ok == true)
+            cout << "Adevarat";
+        else cout << "Fals";
+        cout << "\n\n";
+    }
+}
+
 int main()
 {
     tema3();
- bonusTema3();
+    bonusTema3();
+    cfgOarecare();
 }
