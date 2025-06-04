@@ -157,11 +157,22 @@ void bonusTema3() {
 }
 void cfgOarecare() {
     string s, filename = "../src/CFG.in";
-    ofstream g(filename);
-    while (getline(cin, s) && s != "STOP")
-        g << s << "\n";
-    g.close();
+    string s1;
+    std::cout << "Citeste din CFG.in ? (Nu/Da)" << std::endl;
+    std::cin >> s1;
+    if (s1 == "Nu") {
+        cout << "Introduceti gramatica: (STOP la final)" << std::endl;
+        ofstream g(filename);
+        while (getline(cin, s) && s != "STOP")
+            g << s << "\n";
+        g.close();
+    }
     CFG a(filename);
+    vector<string> Gen = a.generate(10, 10);
+    cout << "Cuvinte generate de gramatica (maxim 10 cuvinte, fiecare cu maxim 10 caractere) : \n";
+    for (int i = 0; i < Gen.size(); i ++)
+        cout << i + 1 << ")" << Gen[i] << "\n";
+    cout << "Introduceti cuvinte:" << std::endl;
     while (getline(cin , s) && s != "STOP") {
         cout << "CFG recognizer: ";
         bool ok = a.recognize(s);
@@ -175,7 +186,7 @@ void cfgOarecare() {
 
 int main()
 {
-    tema3();
-    bonusTema3();
+    //tema3();
+    //bonusTema3();
     cfgOarecare();
 }
