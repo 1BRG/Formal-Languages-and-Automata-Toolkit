@@ -51,7 +51,7 @@ LFA/                             # Project Root
 ├── input.txt                    # NFA/DFA configuration for Task 1
 ├── CMakeLists.txt               # CMake configuration for all tasks
 └── README.md                    # Project documentation```
-
+```
 ## Getting Started
 
 ### Prerequisites
@@ -86,6 +86,7 @@ cmake --build .
 ./run_automat tema3        # Task 3: CFG S→aSb|ε (generate, derive, recognize)
 ./run_automat bonusTema3   # Bonus: a^n b^n c^n (CFG + procedural verify)
 ```
+
 
 ## Core Components & Implementation
 
