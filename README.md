@@ -50,7 +50,7 @@ LFA/                             # Project Root
 │   └── aNbNcN.in                # Bonus CFG for a^n b^n c^n
 ├── input.txt                    # NFA/DFA configuration for Task 1
 ├── CMakeLists.txt               # CMake configuration for all tasks
-└── README.md                    # Project documentation```
+└── README.md                    # Project documentation
 ```
 ## Getting Started
 
