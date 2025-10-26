@@ -1,109 +1,141 @@
-# Proiect LFA - Tema 1, 2 și 3
+# Formal Languages and Automata Toolkit
 
-## Structura proiectului
+[![Language](https://img.shields.io/badge/language-C%2B%2B-blue.svg)](https://isocpp.org/)
+[![Build System](https://img.shields.io/badge/build-CMake-green.svg)](https://cmake.org/)
 
-Proiectul este organizat pe module și directoare separate:
+A comprehensive C++ toolkit for modeling, executing, and analyzing algorithms from the theory of formal languages and automata. This project, built from first principles, provides high-performance implementations of Finite Automata (NFAs, DFAs), regular expression engines, and Context-Free Grammar (CFG) parsers.
+
+## Features
+
+-   **Finite Automata Engine (NFA/DFA)**
+    -   Parse NFA/DFA configurations from custom input files.
+    -   Full **Regex -> NFA -> DFA** conversion pipeline.
+    -   **Regular Expression Parsing** using Shunting-Yard and Thompson's Construction to build an NFA.
+    -   **NFA to DFA conversion** via Subset Construction algorithm.
+    -   High-throughput string validation for any defined automaton.
+-   **Context-Free Grammar (CFG) Module**
+    -   Load and process **any valid CFG** from a standardized input format.
+    -   Generate valid strings from the grammar using a manual **backtracking** algorithm.
+    -   Produce the **leftmost derivation** path for a given target string.
+    -   Efficiently validate string membership using **prefix pruning** to optimize recognition.
+-   **Bonus: Context-Sensitive Language Analysis**
+    -   Includes a "simulated" recognizer for the context-sensitive language `a^n b^n c^n`.
+    -   Procedural verification and in-code comments explain why this language **cannot be parsed by a CFG** (i.e., requires more than one stack).
+
+## Project Structure
+
+The project is organized into a modular structure with separate directories for headers and source files.
 
 ```
-LFA/                             # Root proiect
-├── cmake-build-debug/          # Directory build CLion
-├── include/                    # Headere (.h/.hpp)
-│   ├── Automat.h               # Tema 1-2
-│   ├── Input.h                 # Tema 1-2
-│   ├── Sigma.h                 # Tema 1-2
-│   ├── States.h                # Tema 1-2
-│   ├── Transitions.h           # Tema 1-2
-│   ├── json.hpp                # nlohmann::json
-│   └── CFG.h                   # Tema 3
-├── src/                        # Sursă și resurse
-│   ├── main.cpp                # Punct de intrare (tema1, tema2, tema3, bonus)
-│   ├── Automat.cpp             # Tema 1-2
-│   ├── Transitions.cpp         # Tema 1-2
-│   ├── States.cpp              # Tema 1-2
-│   ├── Sigma.cpp               # Tema 1-2
-│   ├── Input.cpp               # Tema 1-2
-│   ├── CFG.cpp                 # Tema 3
-│   ├── LFA-Assignment2_Regex_DFA.json  # Tema 2 tests
-│   ├── aSb.in                  # CFG S → aSb | ε (tema 3)
-│   └── aNbNcN.in               # CFG „bonus” a^n b^n c^n (tema 3)
-├── input.txt                   # Tema 1 config NFA/DFA
-├── CMakeLists.txt              # Config CMake (toate temele)
-└── README.md                   # Documentație proiect
-```
+LFA/                             # Project Root
+├── cmake-build-debug/           # CLion build directory
+├── include/                     # Header files (.h/.hpp)
+│   ├── Automat.h                # Part of Automata module
+│   ├── Input.h                  # Part of Automata module
+│   ├── Sigma.h                  # Part of Automata module
+│   ├── States.h                 # Part of Automata module
+│   ├── Transitions.h            # Part of Automata module
+│   ├── json.hpp                 # nlohmann::json for parsing tests
+│   └── CFG.h                    # Context-Free Grammar module
+├── src/                         # Source files and resources
+│   ├── main.cpp                 # Entry point (Task 1, 2, 3, Bonus)
+│   ├── Automat.cpp              # Part of Automata module
+│   ├── Transitions.cpp          # Part of Automata module
+│   ├── States.cpp               # Part of Automata module
+│   ├── Sigma.cpp                # Part of Automata module
+│   ├── Input.cpp                # Part of Automata module
+│   ├── CFG.cpp                  # Context-Free Grammar module
+│   ├── LFA-Assignment2_Regex_DFA.json  # JSON tests for Regex->DFA
+│   ├── aSb.in                   # Example CFG: S → aSb | ε
+│   └── aNbNcN.in                # Bonus CFG for a^n b^n c^n
+├── input.txt                    # NFA/DFA configuration for Task 1
+├── CMakeLists.txt               # CMake configuration for all tasks
+└── README.md                    # Project documentation```
 
-## Cum se rulează codul
+## Getting Started
 
-### CLion (Recomandat)
+### Prerequisites
 
-1. File → Open → alege directorul root `LFA/`.
-2. Build → Build Project (Ctrl+F10).
-3. Run → Edit Configurations → adaugă configurări pentru `tema1`, `tema2`, `tema3` și `bonusTema3`.
+-   A C++ compiler (g++, Clang, etc.)
+-   CMake (version 3.10 or higher)
 
-### Linia de comandă (Linux)
+### Building and Running
+
+#### Using CLion (Recommended)
+
+1.  Go to `File > Open` and select the root directory `LFA/`.
+2.  CLion will automatically configure the CMake project.
+3.  `Build > Build Project` (or `Ctrl+F10`).
+4.  `Run > Edit Configurations...` and create run configurations for `tema1`, `tema2`, `tema3`, and `bonusTema3`.
+
+#### Using the Command Line (Linux)
 
 ```bash
+# Create a build directory
 mkdir -p build && cd build
+
+# Configure the project with CMake
 cmake ..
+
+# Compile the project
 cmake --build .
-# rulează:
-./run_automat tema1        # Tema 1: NFA/DFA din input.txt
-./run_automat tema2        # Tema 2: Regex → DFA (JSON tests)
-./run_automat tema3        # Tema 3: CFG S→aSb|ε (generate, derive, recognize)
+
+# To run the executables:
+./run_automat tema1        # Task 1: NFA/DFA from input.txt
+./run_automat tema2        # Task 2: Regex → DFA (JSON tests)
+./run_automat tema3        # Task 3: CFG S→aSb|ε (generate, derive, recognize)
 ./run_automat bonusTema3   # Bonus: a^n b^n c^n (CFG + procedural verify)
 ```
 
-## Descrierea componentelor principale
+## Core Components & Implementation
 
-### Tema 1 și 2 (Automate)
+### Finite Automata Module (Tasks 1 & 2)
 
-* **Automat**: clasa centrală parsează NFA/regex, construiește automat, convertește în DFA.
-* **States, Sigma, Transitions, Input**: suport pentru citire și manipulare automată.
-* **Shunting-Yard & Thompson**: parser regex și construcție NFA.
-* **Subset Construction**: generare DFA.
+-   **`Automat`**: The central class that parses NFAs/regex, builds the automaton, and handles the conversion to a DFA.
+-   **`States`, `Sigma`, `Transitions`, `Input`**: Support classes for reading configurations and managing the components of an automaton.
+-   **Key Algorithms Implemented**:
+    -   **Shunting-Yard & Thompson's Construction**: To parse a regular expression and build an equivalent NFA.
+    -   **Subset Construction**: To convert an NFA into a DFA, eliminating non-determinism.
 
-### Tema 3 (Context-Free Grammar)
+### Context-Free Grammar Module (Task 3)
 
-* **CFG.h / CFG.cpp**: clasa `CFG`:
+-   **`CFG.h / CFG.cpp`**: The `CFG` class provides the core functionality:
+    -   The constructor can parse **any valid context-free grammar** from a file, not just the example `aSb.in`.
+    -   `generate(maxLen, maxCount)`: Generates valid strings using a manual backtracking implementation.
+    -   `derivation(target)`: Returns the steps of the leftmost derivation for a target string.
+    -   `recognize(target)`: Validates string membership using prefix pruning for enhanced efficiency.
+-   **`main.cpp`**: The `tema3()` function calls these methods to demonstrate the functionality.
 
-  * Constructor din fișier `aSb.in` (pentru exemplu), dar **poți folosi orice gramatică independentă de context** validă în același format de intrare.
-  * `generate(maxLen, maxCount)`: generează șiruri cu backtracking.
-  * `derivation(target)`: returnează pașii derivării leftmost.
-  * `recognize(target)`: validare membership cu pruning pe prefixe.
-* **main.cpp**: `tema3()` apelează metodele de mai sus și afișează rezultate.
+### Architectural Decisions
 
-### Bonus (1)
+1.  **Manual Backtracking**: The CFG generator was implemented without external libraries to demonstrate a deep understanding of the algorithm.
+2.  **Prefix Pruning**: The CFG recognizer uses prefix checking to efficiently discard invalid derivation paths early, significantly improving performance.
+3.  **Modular Design**: Each major component (Automata, CFG) is encapsulated in its own set of classes and files for clarity and maintainability.
+4.  **CMake Build System**: The project is configured with CMake to handle all build tasks and dependencies cleanly across different environments.
 
-* Fișierul `aNbNcN.in` conține o implementare "simulată" pentru a^n b^n c^n.
-* Funcția `verify()` din `main.cpp` contorizează `a`, `b`, `c` procedural pentru recunoaștere.
-* Comentariul din cod explică de ce limbajul a^n b^n c^n **nu este** context-free (necesită mai mult de o stivă).
-* **Generalitate**: modulul `CFG` poate încărca și procesa orice gramatică independentă de context descrisă conform formatului de intrare (nu doar `aSb`). Dacă fișierul tău de intrare definește un CFG valid, codul tău va genera, deriva și recunoaște șiruri pentru acel CFG.
+## Usage Example (CFG Module)
 
-## Exemple de output pentru tema 3
+Running the executable for Task 3 demonstrates the CFG capabilities.
 
 ```bash
 ./run_automat tema3
 ```
 
+**Example Output:**
+
 ```
-Cuvinte generate de gramatica S→aSb|ε (maxim 10, fiecare max 10 caractere):
+Words generated by the grammar S→aSb|ε (max 10 words, each max 10 characters):
 ε
 ab
 aabb
 aba…
 
-Derivarea cuvântului "aaabbb":
+Derivation of the word "aaabbb":
 S -> aSb -> aaSbb -> aaaSbbb -> aaabbb
 
-Recunoaștere pentru "aaaabbb": Fals
+Recognition for "aaaabbb": Fals
 ```
-
-## Decizii de implementare
-
-1. **Backtracking manual**: fără librării externe pentru CFG.
-2. **Pruning**: recunoașterea folosește verificarea prefixelor pentru eficiență.
-3. **Structură modulară**: fiecare temă are propriile clase și fișiere.
-4. **CMake**: configurat să includă și tema 3 plus bonus.
 
 ---
 
-*Universitatea din București – Automate și Limbaje Formale*
+*Project for the Formal Languages and Automata course - University of Bucharest*
